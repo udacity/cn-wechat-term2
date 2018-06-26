@@ -4,7 +4,7 @@
 	"setting": {
 		"newFeature": true
 	},
-	"appid": "touristappid",
+	"appid": "你的 App ID",
 	"projectname": "cn-wechat-term2",
 	"condition": {}
 }
