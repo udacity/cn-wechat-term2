@@ -1,8 +1,38 @@
 {
   "pages":[
-    "pages/index/index",
-    "pages/addCgi/addCgi"
+    "pages/home/home",
+    "pages/order/order",
+    "pages/trolley/trolley",
+    "pages/user/user"
   ],
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页",
+        "iconPath": "images/home.png",
+        "selectedIconPath": "images/home-sel.png"
+      },
+      {
+        "pagePath": "pages/order/order",
+        "text": "订单",
+        "iconPath": "images/order.png",
+        "selectedIconPath": "images/order-sel.png"
+      },
+      {
+        "pagePath": "pages/trolley/trolley",
+        "text": "购物车",
+        "iconPath": "images/trolley.png",
+        "selectedIconPath": "images/trolley-sel.png"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "text": "个人中心",
+        "iconPath": "images/user.png",
+        "selectedIconPath": "images/user-sel.png"
+      }
+    ]
+  },
   "window":{
     "backgroundColor":"#F6F6F6",
     "backgroundTextStyle":"light",
