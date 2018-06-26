@@ -2,6 +2,10 @@
 var qcloud = require('../../vendor/wafer2-client-sdk/index')
 var config = require('../../config')
 
+const UNPROMPTED = 0
+const UNAUTHORIZED = 1
+const AUTHORIZED = 2
+
 Page({
 
   /**
@@ -9,6 +13,7 @@ Page({
    */
   data: {
     userInfo: null,
+    locationAuthType: UNPROMPTED
   },
 
   onTapAddress() {
@@ -51,11 +56,54 @@ Page({
   },
 
   onTapLogin: function () {
-    this.doQcloudLogin({
+    this.login({
       success: ({ userInfo }) => {
         this.setData({
-          userInfo
+          userInfo: userInfo
         })
+      }
+    })
+  },
+
+  login({ success, error }) {
+    wx.getSetting({
+      success: res => {
+        if (res.authSetting['scope.userInfo'] === false) {
+          this.setData({
+            locationAuthType: UNAUTHORIZED
+          })
+          // 已拒绝授权
+          wx.showModal({
+            title: '提示',
+            content: '请授权我们获取您的用户信息',
+            showCancel: false
+          })
+        } else {
+          this.setData({
+            locationAuthType: AUTHORIZED
+          })
+          this.doQcloudLogin({ success, error })
+        }
+      }
+    })
+  },
+
+  doQcloudLogin({ success, error }) {
+    // 调用 qcloud 登陆接口
+    qcloud.login({
+      success: result => {
+        if (result) {
+          let userInfo = result
+          success && success({
+            userInfo
+          })
+        } else {
+          // 如果不是首次登录，不会返回用户信息，请求用户信息接口获取
+          this.getUserInfo({ success, error })
+        }
+      },
+      fail: () => {
+        error && error()
       }
     })
   },
@@ -75,26 +123,6 @@ Page({
           })
         } else {
           error && error()
-        }
-      },
-      fail: () => {
-        error && error()
-      }
-    })
-  },
-
-  doQcloudLogin({ success, error }) {
-    // 调用 qcloud 登陆接口
-    qcloud.login({
-      success: result => {
-        if (result) {
-          let userInfo = result
-          success && success({
-            userInfo
-          })
-        } else {
-          // 如果不是首次登录，不会返回用户信息，请求用户信息接口获取
-          this.getUserInfo({ success, error })
         }
       },
       fail: () => {
