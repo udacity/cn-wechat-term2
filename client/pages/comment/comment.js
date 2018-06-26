@@ -12,6 +12,17 @@ Page({
     commentList: [], // 评论列表
   },
 
+  previewImg(event) {
+    let target = event.currentTarget
+    let src = target.dataset.src
+    let urls = target.dataset.urls
+
+    wx.previewImage({
+      current: src,
+      urls: urls
+    })
+  },
+
   getCommentList(id) {
     qcloud.request({
       url: config.service.commentList,
@@ -25,6 +36,7 @@ Page({
             commentList: data.data.map(item => {
               let itemDate = new Date(item.create_time)
               item.createTime = _.formatTime(itemDate)
+              item.images = item.images ? item.images.split(';;') : []
               return item
             })
           })
