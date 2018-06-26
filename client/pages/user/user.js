@@ -29,7 +29,25 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    this.checkSession({
+      success: ({ userInfo }) => {
+        this.setData({
+          userInfo: userInfo
+        })
+      },
+      error: () => { }
+    })
+  },
 
+  checkSession({ success, error }) {
+    wx.checkSession({
+      success: () => {
+        this.getUserInfo({ success, error })
+      },
+      fail: () => {
+        error && error()
+      }
+    })
   },
 
   onTapLogin: function () {
@@ -38,26 +56,6 @@ Page({
         this.setData({
           userInfo
         })
-      }
-    })
-  },
-
-  doQcloudLogin({ success, error }) {
-    // 调用 qcloud 登陆接口
-    qcloud.login({
-      success: result => {
-        if (result) {
-          let userInfo = result
-          success && success({
-            userInfo
-          })
-        } else {
-          // 如果不是首次登录，不会返回用户信息，请求用户信息接口获取
-          this.getUserInfo({ success, error })
-        }
-      },
-      fail: () => {
-        error && error()
       }
     })
   },
@@ -77,6 +75,26 @@ Page({
           })
         } else {
           error && error()
+        }
+      },
+      fail: () => {
+        error && error()
+      }
+    })
+  },
+
+  doQcloudLogin({ success, error }) {
+    // 调用 qcloud 登陆接口
+    qcloud.login({
+      success: result => {
+        if (result) {
+          let userInfo = result
+          success && success({
+            userInfo
+          })
+        } else {
+          // 如果不是首次登录，不会返回用户信息，请求用户信息接口获取
+          this.getUserInfo({ success, error })
         }
       },
       fail: () => {
