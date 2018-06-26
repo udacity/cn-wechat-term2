@@ -32,7 +32,8 @@
 				{
 					"id": -1,
 					"name": "商品详情页",
-					"pathName": "pages/detail/detail"
+					"pathName": "pages/detail/detail",
+					"query": ""
 				}
 			]
 		}

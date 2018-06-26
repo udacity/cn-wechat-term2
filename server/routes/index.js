@@ -33,5 +33,7 @@ router.get('/message', controllers.message.get)
 router.post('/message', controllers.message.post)
 // 获取商品列表
 router.get('/product', controllers.product.list)
+// 获取商品详情
+router.get('/product/:id', controllers.product.detail)
 
 module.exports = router
