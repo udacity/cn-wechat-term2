@@ -2,7 +2,7 @@
  * ajax 服务路由集合
  */
 const router = require('koa-router')({
-    prefix: '/weapp'
+  prefix: '/weapp'
 })
 const controllers = require('../controllers')
 
@@ -35,5 +35,7 @@ router.post('/message', controllers.message.post)
 router.get('/product', controllers.product.list)
 // 获取商品详情
 router.get('/product/:id', controllers.product.detail)
+// 创建订单
+router.post('/order', validationMiddleware, controllers.order.add)
 
 module.exports = router
