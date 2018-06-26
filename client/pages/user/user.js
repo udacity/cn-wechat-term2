@@ -1,10 +1,5 @@
 // pages/user/user.js
-var qcloud = require('../../vendor/wafer2-client-sdk/index')
-var config = require('../../config')
-
-const UNPROMPTED = 0
-const UNAUTHORIZED = 1
-const AUTHORIZED = 2
+const app = getApp()
 
 Page({
 
@@ -13,7 +8,7 @@ Page({
    */
   data: {
     userInfo: null,
-    locationAuthType: UNPROMPTED
+    locationAuthType: app.data.locationAuthType
   },
 
   onTapAddress() {
@@ -30,103 +25,26 @@ Page({
     })
   },
 
+
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.checkSession({
-      success: ({ userInfo }) => {
-        this.setData({
-          userInfo: userInfo
-        })
-      },
-      error: () => { }
-    })
-  },
 
-  checkSession({ success, error }) {
-    wx.checkSession({
-      success: () => {
-        this.getUserInfo({ success, error })
-      },
-      fail: () => {
-        error && error()
-      }
-    })
   },
 
   onTapLogin: function () {
-    this.login({
+    app.login({
       success: ({ userInfo }) => {
         this.setData({
-          userInfo: userInfo
+          userInfo,
+          locationAuthType: app.data.locationAuthType
         })
-      }
-    })
-  },
-
-  login({ success, error }) {
-    wx.getSetting({
-      success: res => {
-        if (res.authSetting['scope.userInfo'] === false) {
-          this.setData({
-            locationAuthType: UNAUTHORIZED
-          })
-          // 已拒绝授权
-          wx.showModal({
-            title: '提示',
-            content: '请授权我们获取您的用户信息',
-            showCancel: false
-          })
-        } else {
-          this.setData({
-            locationAuthType: AUTHORIZED
-          })
-          this.doQcloudLogin({ success, error })
-        }
-      }
-    })
-  },
-
-  doQcloudLogin({ success, error }) {
-    // 调用 qcloud 登陆接口
-    qcloud.login({
-      success: result => {
-        if (result) {
-          let userInfo = result
-          success && success({
-            userInfo
-          })
-        } else {
-          // 如果不是首次登录，不会返回用户信息，请求用户信息接口获取
-          this.getUserInfo({ success, error })
-        }
       },
-      fail: () => {
-        error && error()
-      }
-    })
-  },
-
-  getUserInfo({ success, error }) {
-    qcloud.request({
-      url: config.service.requestUrl,
-      login: true,
-      success: result => {
-        let data = result.data
-
-        if (!data.code) {
-          let userInfo = data.data
-
-          success && success({
-            userInfo
-          })
-        } else {
-          error && error()
-        }
-      },
-      fail: () => {
-        error && error()
+      error: () => {
+        this.setData({
+          locationAuthType: app.data.locationAuthType
+        })
       }
     })
   },
@@ -142,7 +60,17 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    // 同步授权状态
+    this.setData({
+      locationAuthType: app.data.locationAuthType
+    })
+    app.checkSession({
+      success: ({ userInfo }) => {
+        this.setData({
+          userInfo
+        })
+      }
+    })
   },
 
   /**
