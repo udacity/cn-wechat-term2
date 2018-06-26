@@ -10,7 +10,43 @@ Page({
    */
   data: {
     userInfo: null,
-    locationAuthType: app.data.locationAuthType
+    locationAuthType: app.data.locationAuthType,
+    orderList: [
+      {
+        id: 0,
+        list: [{
+          count: 1,
+          image: 'https://product-1256969339.cos.ap-shanghai.myqcloud.com/product2.jpg',
+          name: '商品1',
+          price: 50.5,
+        }]
+      },
+      {
+        id: 1,
+        list: [{
+          count: 1,
+          image: 'https://product-1256969339.cos.ap-shanghai.myqcloud.com/product2.jpg',
+          name: '商品1',
+          price: 50.5,
+        },
+        {
+          count: 1,
+          image: 'https://product-1256969339.cos.ap-shanghai.myqcloud.com/product3.jpg',
+          name: '商品2',
+          price: 50.5,
+        }
+        ]
+      },
+      {
+        id: 2,
+        list: [{
+          count: 1,
+          image: 'https://product-1256969339.cos.ap-shanghai.myqcloud.com/product3.jpg',
+          name: '商品2',
+          price: 50.5,
+        }]
+      }
+    ], // 订单列表
   },
 
   /**
